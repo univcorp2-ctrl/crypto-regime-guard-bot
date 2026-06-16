@@ -1,0 +1,25 @@
+[bot]
+mode = "live"
+exchange_id = "binance"
+symbol = "BTC/USDT"
+timeframe = "1h"
+strategy = "regime_guard"
+candle_limit = 200
+quote_order_size = 15.0
+poll_seconds = 300
+enable_live_trading = true
+
+# Empty data_path means fetch live OHLCV through CCXT.
+data_path = ""
+
+state_path = "state/live_state.json"
+trade_log_path = "logs/live_trades.csv"
+
+[risk]
+min_quote_order = 10.0
+max_single_trade_quote = 15.0
+max_risk_score = 70.0
+allow_live_market_orders = true
+
+[strategy_params]
+# Keep default regime_guard parameters first.
