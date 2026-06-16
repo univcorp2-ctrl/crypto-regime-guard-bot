@@ -1,0 +1,30 @@
+repo,stars_observed,category,maintenance_signal,risk_signal,evaluation
+freqtrade/freqtrade,51500,framework,active-high-community,normal,strong candidate for Python strategy research and dry-run trading
+hummingbot/hummingbot,18900,market-making-framework,active-high-community,complex-ops,strong candidate for market-making and connector architecture
+askmike/gekko,10200,historical-bot,archived,stale,historical only; do not base new production on it
+StockSharp/StockSharp,10100,multi-market-platform,active,broad-scope,strong for C# multi-market teams; heavy for crypto-only prototype
+DeviaVir/zenbot,8300,historical-bot,archived,stale,historical only; do not base new production on it
+jesse-ai/jesse,8000,research-framework,active,normal,strong for Python backtesting and strategy development
+Drakkar-Software/OctoBot,6100,bot-platform,active,normal,good usability with UI/Grid/DCA/AI/TradingView features
+Superalgos/Superalgos,5500,visual-platform,release-check-needed,normal,feature-rich visual platform; verify current release health
+nkaz001/hftbacktest,4200,hft-backtest,active,advanced,strong for order-book and latency-aware microstructure research
+thrasher-corp/gocryptotrader,3400,exchange-framework,active,not-production-ready-note,useful Go exchange framework; respect production warning
+Open-Trader/opentrader,2700,bot-platform,active,normal,promising UI/Grid/DCA/RSI platform
+ZENALC/algobot,954,gui-bot,stale-check-needed,normal,interesting GUI backtest/live bot; verify maintenance
+cassandre-tech/cassandre-trading-bot,654,java-framework,older-release,normal,useful if building in Java/Spring
+fremantle-industries/tai,447,execution-toolkit,stale-check-needed,normal,interesting Elixir real-time toolkit; niche
+markusaksli/TradeBot,364,binance-java-bot,stale-check-needed,normal,small Java Binance bot; review code before use
+okx/agent-trade-kit,331,exchange-agent-kit,active,agent-risk,useful for OKX/MCP experiments; not a full strategy proof
+Apteralarchangel/Crypto-Trading-Bots-for-FREE-Binance-ByBit-KuCoin-Huobi-OKX,227,unknown,unknown,marketing-heavy,avoid until security reviewed
+caligolam/Trading-Bot,227,unknown,unknown,marketing-heavy,avoid until security reviewed
+jilv220/BB_RPB_TSL,213,freqtrade-strategy,stale-check-needed,overfit-risk,strategy idea only; needs walk-forward validation
+imsatoshi/GeneTrader,193,optimizer,active,overfit-risk,useful for genetic optimization with strict validation
+alanvito1/ORSTAC,192,bot-collection,active,market-mismatch,not crypto-specific enough for this repo
+ScopThisOp/crypt-bot-crck,180,suspicious,unknown,crack-keyword,avoid security risk
+nelso0/barbotine-scalping-bot,119,scalping-bot,stale-check-needed,execution-risk,interesting concept; requires exchange microstructure validation
+grantcolley/tradeview,113,dotnet-platform,stale,normal,historical/niche C# platform
+CryptoGnome/Bybit-Lick-Hunter-v4,105,bybit-bot,stale-check-needed,high-risk-name,review carefully before use
+paonosso/paonosso1,94,unknown,unknown,marketing-heavy,avoid until security reviewed
+diogomatoschaves/MyCryptoBot,92,backtesting-platform,stale-check-needed,normal,small Python platform; review maintenance
+kaiyn-capital/kaiyn-trading-bot,0,bitget-telegram-bot,very-recent,early-stage,too early; interesting CI/test structure if maintained
+alexch03/analyseur-crypto,1,market-structure-research,very-recent,early-stage,early but notable tests and market-structure focus
