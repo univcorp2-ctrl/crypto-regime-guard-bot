@@ -1,0 +1,41 @@
+# Intended GitHub Actions workflow.
+# Copy to .github/workflows/ci.yml after the GitHub automation token has workflow-file permission.
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.11', '3.12']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e '.[dev]'
+      - name: Lint
+        run: ruff check .
+      - name: Test
+        run: pytest -q
+      - name: Sample backtest
+        run: |
+          mkdir -p artifacts
+          python -m crypto_regime_guard.cli backtest data/sample_btc_usdt_1h.csv --json-output artifacts/sample-backtest.json | tee artifacts/sample-backtest.txt
+      - name: Upload sample backtest artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sample-backtest-${{ matrix.python-version }}
+          path: artifacts/sample-backtest.*
