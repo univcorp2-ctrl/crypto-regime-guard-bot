@@ -1,69 +1,66 @@
 # Architecture
 
-Crypto Regime Guard is a paper-first research and backtesting system. It is intentionally smaller than full frameworks such as Freqtrade or Hummingbot, but it borrows their best operational ideas: dry-run first, explicit risk controls, reproducibility, and auditable strategy code.
+Crypto Regime Guard is now a selectable-strategy trading bot with three execution levels:
+
+1. Backtest.
+2. Paper trading.
+3. Guarded live trading through CCXT.
 
 ## Components
 
 ```mermaid
 flowchart TD
-  CSV[OHLCV CSV data] --> Loader[CSV Loader]
-  Loader --> Indicators[Indicators: EMA, ATR, z-score, range efficiency]
-  Indicators --> Strategy[RegimeGuardStrategy]
-  Strategy --> Risk[Risk Gate: shock/downtrend filter]
-  Risk --> Backtester[Backtester]
-  Backtester --> Metrics[Return, drawdown, trades, Sharpe-like]
-  GitHub[GitHub API] --> Scanner[Repo Scanner]
-  Scanner --> Report[CSV + Markdown report]
+  Config[config/*.toml] --> Registry[Strategy Catalog]
+  Registry --> Strategy[Selected Strategy]
+  CSV[CSV OHLCV] --> Market[MarketDataSource]
+  CCXT[CCXT OHLCV] --> Market
+  Market --> Strategy
+  Strategy --> Signal[BUY / SELL / HOLD]
+  Signal --> Risk[RiskManager]
+  Risk --> Mode{mode}
+  Mode -->|paper| Paper[PaperExecutor]
+  Mode -->|live| Live[LiveCcxtExecutor]
+  Paper --> Logs[logs/trades.csv + state/*.json]
+  Live --> Exchange[Exchange Orders]
 ```
 
-## Trading logic boundary
+## Strategy registry
 
-The strategy emits target exposure only. It does not directly place exchange orders. This makes the first release suitable for research, paper trading, CI tests, and review. A future exchange adapter should consume target exposure and be responsible for tick size, minimum notional, rate limit, order idempotency, and kill switches.
+`crypto_regime_guard/strategy_catalog.py` maps config names to strategy classes:
 
-## Data flow
+- `regime_guard`
+- `ema_cross`
+- `donchian_trend`
+- `rsi_reversion`
+- `bollinger_breakout`
 
-1. `load_candles_csv()` validates OHLCV rows.
-2. Indicators calculate trend, volatility, and noise state.
-3. `RegimeGuardStrategy.generate_signals()` classifies each candle.
-4. `Backtester.run()` converts target exposure into simulated trades with fees and slippage.
-5. Metrics are written to stdout or JSON artifacts.
+The CLI and trading engine both call `build_strategy(config.strategy, config.strategy_params)`.
 
-## Risk controls
+## Trading loop
 
-- Long-only by default.
-- Flat during downtrend and shock regimes.
-- ATR-based volatility guard.
-- No martingale and no unlimited DCA.
-- Position target is capped by configuration.
+`TradingEngine.run_once()` does this:
 
-## GitHub research scanner
+1. Load candles from CSV or CCXT.
+2. Generate signals from the selected strategy.
+3. Take the latest signal.
+4. Apply risk checks.
+5. Execute paper fill or live CCXT market order.
+6. Return a structured JSON-like result.
 
-The scanner is separate from the trading engine. It uses GitHub Search API queries and scores repositories by:
+## Live trading guardrails
 
-- stars and forks,
-- recent push date,
-- archive status,
-- license presence,
-- trading-bot relevance,
-- suspicious keywords such as hack, cheat, crack, private-key, sniper.
+Live trading requires:
 
-The scanner can include owner repositories when `--include-owner-repos` is passed and a `GITHUB_TOKEN` is present.
+- `mode = "live"`
+- `enable_live_trading = true`
+- `EXCHANGE_API_KEY`
+- `EXCHANGE_API_SECRET`
+- `CRYPTO_BOT_LIVE_ACK = I_UNDERSTAND_THIS_CAN_LOSE_MONEY`
 
-## Future production architecture
+The default config keeps order size small and blocks high risk-score trades.
 
-```mermaid
-sequenceDiagram
-  participant Market as Exchange Market Data
-  participant Strategy as RegimeGuardStrategy
-  participant Risk as Risk Manager
-  participant Paper as Paper/Live Adapter
-  participant Alerts as Alerts
+## Why this logic
 
-  Market->>Strategy: candles/orderbook snapshots
-  Strategy->>Risk: desired target exposure
-  Risk->>Paper: approved target or flat
-  Paper->>Market: paper/live orders
-  Paper->>Alerts: fills, errors, drawdown, kill switch events
-```
+The bot favors strategies that can be explained and audited. Instead of pretending one magic model always wins, it gives users strategy choices and makes every decision visible through `Signal.reason`.
 
-Production should add exchange-specific adapters, monitoring, persistent state, and canary paper trading before any live order is enabled.
+The default `regime_guard` strategy remains the conservative recommendation because it tries to avoid the worst failure mode of simple bots: trading aggressively during shock volatility or downtrends.
