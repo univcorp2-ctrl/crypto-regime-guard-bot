@@ -84,6 +84,54 @@ def rolling_zscore(values: Sequence[float], window: int) -> list[float | None]:
     return out
 
 
+def rsi(values: Sequence[float], window: int = 14) -> list[float | None]:
+    _validate_window(window)
+    if len(values) < 2:
+        return [None for _ in values]
+    out: list[float | None] = [None]
+    gains: list[float] = []
+    losses: list[float] = []
+    for i in range(1, len(values)):
+        change = values[i] - values[i - 1]
+        gains.append(max(change, 0.0))
+        losses.append(abs(min(change, 0.0)))
+        if i < window:
+            out.append(None)
+            continue
+        recent_gains = gains[i - window : i]
+        recent_losses = losses[i - window : i]
+        avg_gain = sum(recent_gains) / window
+        avg_loss = sum(recent_losses) / window
+        if avg_loss == 0:
+            out.append(100.0)
+        else:
+            relative_strength = avg_gain / avg_loss
+            out.append(100.0 - (100.0 / (1.0 + relative_strength)))
+    return out
+
+
+def bollinger_bands(
+    values: Sequence[float], window: int = 20, stddev_multiple: float = 2.0
+) -> tuple[list[float | None], list[float | None], list[float | None]]:
+    _validate_window(window)
+    middle = sma(values, window)
+    upper: list[float | None] = []
+    lower: list[float | None] = []
+    for i in range(len(values)):
+        if i + 1 < window:
+            upper.append(None)
+            lower.append(None)
+            continue
+        segment = values[i + 1 - window : i + 1]
+        mean = middle[i]
+        assert mean is not None
+        variance = sum((value - mean) ** 2 for value in segment) / window
+        std = math.sqrt(variance)
+        upper.append(mean + stddev_multiple * std)
+        lower.append(mean - stddev_multiple * std)
+    return middle, upper, lower
+
+
 def range_efficiency(values: Sequence[float], lookback: int, index: int) -> float | None:
     """Absolute displacement divided by path length.
 
