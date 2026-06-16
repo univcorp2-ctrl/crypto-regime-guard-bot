@@ -1,55 +1,52 @@
 # Setup Guide
 
-## Local development
+## 最短セットアップ
 
 ```bash
+git clone https://github.com/univcorp2-ctrl/crypto-regime-guard-bot.git
+cd crypto-regime-guard-bot
 python -m venv .venv
 source .venv/bin/activate
-pip install -e '.[dev]'
+pip install -e '.[dev,live]'
 pytest
-python -m crypto_regime_guard.cli backtest data/sample_btc_usdt_1h.csv
 ```
+
+## 戦略一覧
+
+```bash
+python -m crypto_regime_guard.cli list-strategies
+```
+
+## バックテスト
+
+```bash
+python -m crypto_regime_guard.cli backtest data/sample_btc_usdt_1h.csv --strategy regime_guard
+python -m crypto_regime_guard.cli backtest data/sample_btc_usdt_1h.csv --strategy ema_cross
+python -m crypto_regime_guard.cli backtest data/sample_btc_usdt_1h.csv --strategy rsi_reversion
+```
+
+## 紙取引
+
+```bash
+python -m crypto_regime_guard.cli trade --config config/paper.example.toml --once
+```
+
+## ライブ取引
+
+```bash
+export EXCHANGE_API_KEY='your_key'
+export EXCHANGE_API_SECRET='your_secret'
+export CRYPTO_BOT_LIVE_ACK='I_UNDERSTAND_THIS_CAN_LOSE_MONEY'
+python -m crypto_regime_guard.cli trade --config config/live.example.toml --once
+```
+
+詳細は `docs/live-trading.md` を読んでください。
 
 ## GitHub Actions
 
-Two workflows are included:
+現在のGitHub automation tokenでは `.github/workflows/*` の作成が404で失敗したため、workflow定義は `docs/workflows/` に保存しています。
 
-- `CI`: lint, tests, sample backtest, artifact upload.
-- `Research 300+ GitHub crypto trading bot repos`: manual scan of GitHub repositories and artifact upload.
+- `docs/workflows/ci.yml`
+- `docs/workflows/research.yml`
 
-## Secrets
-
-No secret is required for normal CI or local sample backtests.
-
-Optional future/live secrets:
-
-- `GITHUB_TOKEN`: only needed locally for high-rate GitHub repo scanning. GitHub Actions provides `github.token` automatically.
-- `EXCHANGE_API_KEY`: future live/paper exchange adapter.
-- `EXCHANGE_API_SECRET`: future live/paper exchange adapter.
-- `EXCHANGE_API_PASSPHRASE`: only for exchanges that require it.
-
-Keep withdrawals disabled on any exchange API key. Use read-only keys for research wherever possible.
-
-## Running the 300+ repo scan in GitHub
-
-1. Open the repository Actions tab.
-2. Select `Research 300+ GitHub crypto trading bot repos`.
-3. Run workflow with `limit=350`.
-4. Download artifact `repo-research-report`.
-
-The artifact contains:
-
-- `repo-evaluation.csv`
-- `repo-evaluation.md`
-
-## Going live later
-
-Before live trading, add:
-
-- exchange adapter with dry-run mode,
-- order-size validation,
-- rate-limit handling,
-- persistent positions,
-- emergency flat command,
-- monitoring and alerts,
-- walk-forward and out-of-sample reports.
+workflow-file作成権限があるtokenで `.github/workflows/` に移せばCIが動きます。
