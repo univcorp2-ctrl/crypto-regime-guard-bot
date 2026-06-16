@@ -1,0 +1,28 @@
+[bot]
+mode = "paper"
+exchange_id = "binance"
+symbol = "BTC/USDT"
+timeframe = "1h"
+strategy = "regime_guard"
+candle_limit = 200
+quote_order_size = 25.0
+poll_seconds = 60
+enable_live_trading = false
+
+# Safe beginner mode: no exchange connection. Replace with an empty value to use CCXT public OHLCV.
+data_path = "data/sample_btc_usdt_1h.csv"
+
+paper_initial_quote = 1000.0
+state_path = "state/paper_state.json"
+trade_log_path = "logs/trades.csv"
+
+[risk]
+min_quote_order = 10.0
+max_single_trade_quote = 50.0
+max_risk_score = 85.0
+allow_live_market_orders = true
+
+[strategy_params]
+# Example override for ema_cross:
+# fast_ema = 12
+# slow_ema = 48
