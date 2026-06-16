@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "crypto-regime-guard"
-version = "0.1.0"
-description = "Paper-first crypto trading strategy, backtester, and GitHub repo scanner."
+version = "0.2.0"
+description = "Selectable-strategy, paper-first and live-capable crypto trading bot."
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
@@ -13,7 +13,15 @@ authors = [{name = "GitHub-GPT Developer"}]
 dependencies = []
 
 [project.optional-dependencies]
+live = [
+  "ccxt>=4.4.0"
+]
 dev = [
+  "pytest>=8.0",
+  "ruff>=0.6"
+]
+all = [
+  "ccxt>=4.4.0",
   "pytest>=8.0",
   "ruff>=0.6"
 ]
