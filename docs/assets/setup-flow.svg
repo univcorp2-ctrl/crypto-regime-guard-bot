@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img" aria-labelledby="title desc">
+  <title id="title">Crypto Regime Guard Bot setup flow</title>
+  <desc id="desc">Japanese visual setup guide for clone, install, strategy selection, backtest, paper trading, and guarded live trading.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#07111f"/>
+      <stop offset="1" stop-color="#0b2a3d"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" x2="1">
+      <stop offset="0" stop-color="#10263a"/>
+      <stop offset="1" stop-color="#123d4d"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+  <rect width="1200" height="720" fill="url(#bg)"/>
+  <text x="54" y="76" fill="#ffffff" font-size="42" font-family="Arial, sans-serif" font-weight="700">自動売買Bot 初期導入フロー</text>
+  <text x="56" y="114" fill="#9ee7ff" font-size="20" font-family="Arial, sans-serif">バックテスト → 紙取引 → 小額ライブの順に安全確認</text>
+  <g font-family="Arial, sans-serif" filter="url(#shadow)">
+    <g transform="translate(55 165)">
+      <rect width="245" height="125" rx="18" fill="url(#card)" stroke="#44c2ff"/>
+      <text x="20" y="38" fill="#fff" font-size="24" font-weight="700">1. Clone</text>
+      <text x="20" y="72" fill="#d8f6ff" font-size="17">GitHubから取得</text>
+      <text x="20" y="100" fill="#79ffb2" font-size="15">git clone ...</text>
+    </g>
+    <g transform="translate(350 165)">
+      <rect width="245" height="125" rx="18" fill="url(#card)" stroke="#44c2ff"/>
+      <text x="20" y="38" fill="#fff" font-size="24" font-weight="700">2. Install</text>
+      <text x="20" y="72" fill="#d8f6ff" font-size="17">仮想環境と依存関係</text>
+      <text x="20" y="100" fill="#79ffb2" font-size="15">pip install -e '.[dev,live]'</text>
+    </g>
+    <g transform="translate(645 165)">
+      <rect width="245" height="125" rx="18" fill="url(#card)" stroke="#44c2ff"/>
+      <text x="20" y="38" fill="#fff" font-size="24" font-weight="700">3. Strategy</text>
+      <text x="20" y="72" fill="#d8f6ff" font-size="17">ロジックを選択</text>
+      <text x="20" y="100" fill="#79ffb2" font-size="15">strategy = "ema_cross"</text>
+    </g>
+    <g transform="translate(940 165)">
+      <rect width="205" height="125" rx="18" fill="url(#card)" stroke="#44c2ff"/>
+      <text x="20" y="38" fill="#fff" font-size="24" font-weight="700">4. Test</text>
+      <text x="20" y="72" fill="#d8f6ff" font-size="17">過去データ検証</text>
+      <text x="20" y="100" fill="#79ffb2" font-size="15">backtest</text>
+    </g>
+    <g transform="translate(190 390)">
+      <rect width="280" height="135" rx="18" fill="#112f2a" stroke="#79ffb2"/>
+      <text x="22" y="40" fill="#fff" font-size="25" font-weight="700">5. Paper Trading</text>
+      <text x="22" y="78" fill="#d8f6ff" font-size="17">実資金なしで売買動作</text>
+      <text x="22" y="108" fill="#79ffb2" font-size="15">trade --config paper --once</text>
+    </g>
+    <g transform="translate(560 390)">
+      <rect width="280" height="135" rx="18" fill="#3c2020" stroke="#ffb86b"/>
+      <text x="22" y="40" fill="#fff" font-size="25" font-weight="700">6. Live Guard</text>
+      <text x="22" y="78" fill="#ffd8bd" font-size="17">APIキー + 同意フラグ</text>
+      <text x="22" y="108" fill="#ffcf8a" font-size="15">CRYPTO_BOT_LIVE_ACK</text>
+    </g>
+    <g transform="translate(890 390)">
+      <rect width="220" height="135" rx="18" fill="#3c2020" stroke="#ff6b6b"/>
+      <text x="22" y="40" fill="#fff" font-size="25" font-weight="700">7. Live</text>
+      <text x="22" y="78" fill="#ffd8bd" font-size="17">小額で実売買</text>
+      <text x="22" y="108" fill="#ffcf8a" font-size="15">BUY / SELL</text>
+    </g>
+  </g>
+  <g stroke="#9ee7ff" stroke-width="5" fill="none" marker-end="url(#arrow)">
+    <path d="M300 228 L350 228"/>
+    <path d="M595 228 L645 228"/>
+    <path d="M890 228 L940 228"/>
+    <path d="M1038 290 C1038 350 330 340 330 390"/>
+    <path d="M470 457 L560 457"/>
+    <path d="M840 457 L890 457"/>
+  </g>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#9ee7ff"/>
+    </marker>
+  </defs>
+  <rect x="55" y="590" width="1090" height="72" rx="16" fill="#081927" stroke="#244d63"/>
+  <text x="80" y="622" fill="#ffffff" font-size="20" font-family="Arial, sans-serif" font-weight="700">重要:</text>
+  <text x="142" y="622" fill="#ffd8bd" font-size="18" font-family="Arial, sans-serif">ライブ取引は損失リスクがあります。APIキーは出金不可、最初は小額、必ず紙取引で確認してください。</text>
+  <text x="80" y="650" fill="#9ee7ff" font-size="17" font-family="Arial, sans-serif">設定ファイルで戦略を変えるだけで、同じ実行エンジンが別ロジックを動かします。</text>
+</svg>
